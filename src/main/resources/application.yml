@@ -1,0 +1,11 @@
+server:
+  port: ${appPort}
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: ${datasourceUrl}
+    username: ${datasourceUsername}
+    password: ${datasourcePassword}
