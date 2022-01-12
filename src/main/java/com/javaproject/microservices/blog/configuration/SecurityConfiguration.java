@@ -1,7 +1,7 @@
 package com.javaproject.microservices.blog.configuration;
 
 import com.javaproject.microservices.blog.utils.AuthenticationRequestFilter;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -13,6 +13,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import lombok.RequiredArgsConstructor;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -33,7 +35,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
       .csrf()
       .disable()
       .authorizeRequests()
-      .antMatchers(HttpMethod.GET, "/")
+      .antMatchers(HttpMethod.GET, "/**")
       .permitAll()
       .anyRequest()
       .authenticated()

@@ -1,8 +1,9 @@
 package com.javaproject.microservices.blog.controller;
 
+import com.javaproject.microservices.blog.dto.BlogDetailsDto;
 import com.javaproject.microservices.blog.dto.BlogDto;
 import com.javaproject.microservices.blog.service.BlogService;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping(value = BlogController.CONTROLLER_URL)
@@ -53,10 +56,10 @@ public class BlogController {
   }
 
   @GetMapping("{id}")
-  public ResponseEntity<BlogDto> getBlogDetail(
+  public ResponseEntity<BlogDetailsDto> getBlogDetail(
     @PathVariable(value = "id") long id
   ) {
-    return new ResponseEntity<BlogDto>(blogService.getById(id), HttpStatus.OK);
+    return new ResponseEntity<>(blogService.getById(id), HttpStatus.OK);
   }
 
   @DeleteMapping("{id}")

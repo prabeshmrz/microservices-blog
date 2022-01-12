@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BlogDto {
+public class BlogDetailsDto {
 
   private long id;
 
@@ -17,7 +17,7 @@ public class BlogDto {
 
   private String content;
 
-  private String username;
+  private UserDto userDto;
 
   private Timestamp createdAt;
 
