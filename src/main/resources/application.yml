@@ -2,6 +2,8 @@ server:
   port: ${appPort}
 
 spring:
+  application:
+    name: blog-service
   jpa:
     hibernate:
       ddl-auto: update
