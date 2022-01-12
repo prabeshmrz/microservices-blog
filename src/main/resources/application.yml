@@ -9,3 +9,6 @@ spring:
     url: ${datasourceUrl}
     username: ${datasourceUsername}
     password: ${datasourcePassword}
+
+jwt:
+  secret: ${jwtSecret}
