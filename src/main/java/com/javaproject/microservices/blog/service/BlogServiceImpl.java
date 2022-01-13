@@ -42,17 +42,31 @@ public class BlogServiceImpl implements BlogService {
   public Blog findById(long id) {
     return blogRepository
       .findById(id)
-      .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource Not Found!!"));
+      .orElseThrow(() ->
+        new ResponseStatusException(
+          HttpStatus.NOT_FOUND,
+          "Resource Not Found!!"
+        )
+      );
   }
 
   @Override
   public BlogDto updateBlog(long id, BlogDto blogDto) {
     var blog = findById(id);
 
-    if (blogDto.getId() != blog.getId()) throw new ResponseStatusException(
-      HttpStatus.CONFLICT,
-      "Resource You Are Trying To Update Doesnot Matches!!"
-    );
+    if (blogDto.getId() != blog.getId()) {
+      throw new ResponseStatusException(
+        HttpStatus.CONFLICT,
+        "Resource You Are Trying To Update Doesnot Matches!!"
+      );
+    }
+
+    if (!blog.getUsername().equals(AuthenticationUtils.getUserId(true))) {
+      throw new ResponseStatusException(
+        HttpStatus.FORBIDDEN,
+        "You Don't Have Permission To Update Given Resource!!"
+      );
+    }
 
     var updatedBlog = blogMapper.mergeToEntity(blogDto, blog);
 
@@ -73,7 +87,15 @@ public class BlogServiceImpl implements BlogService {
 
   @Override
   public void deleteById(long id) {
-    findById(id);
+    var blog = findById(id);
+
+    if (!blog.getUsername().equals(AuthenticationUtils.getUserId(true))) {
+      throw new ResponseStatusException(
+        HttpStatus.FORBIDDEN,
+        "You Don't Have Permission To Delete Given Resource!!"
+      );
+    }
+
     blogRepository.deleteById(id);
   }
 }
