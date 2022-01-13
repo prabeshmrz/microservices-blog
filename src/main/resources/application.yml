@@ -1,7 +1,18 @@
+eureka:
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: ${eurekaServiceZone}
+  instance:
+    hostname: ${hostname}
+
 server:
   port: ${appPort}
 
 spring:
+  application:
+    name: blog-service
   jpa:
     hibernate:
       ddl-auto: update
@@ -9,3 +20,6 @@ spring:
     url: ${datasourceUrl}
     username: ${datasourceUsername}
     password: ${datasourcePassword}
+
+jwt:
+  secret: ${jwtSecret}
