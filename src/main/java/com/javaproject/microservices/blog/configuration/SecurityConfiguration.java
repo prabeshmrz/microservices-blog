@@ -1,7 +1,12 @@
 package com.javaproject.microservices.blog.configuration;
 
 import com.javaproject.microservices.blog.utils.AuthenticationRequestFilter;
-
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -13,8 +18,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import lombok.RequiredArgsConstructor;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -37,6 +40,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
       .authorizeRequests()
       .antMatchers(HttpMethod.GET, "/**")
       .permitAll()
+      .antMatchers("/blog")
+      .hasRole("USER")
       .anyRequest()
       .authenticated()
       .and()
@@ -51,5 +56,29 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   @Bean
   public PasswordEncoder getPasswordEncoder() {
     return NoOpPasswordEncoder.getInstance();
+  }
+
+  @Bean
+  public OpenAPI customOpenAPI() {
+    return new OpenAPI()
+      .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
+      .components(
+        new Components()
+          .addSecuritySchemes(
+            "bearerAuth",
+            new SecurityScheme()
+              .type(SecurityScheme.Type.HTTP)
+              .scheme("bearer")
+              .bearerFormat("JWT")
+          )
+      )
+      .info(getInfo());
+  }
+
+  private Info getInfo() {
+    return new Info()
+      .title("Blog Microservice")
+      .version("0.1")
+      .description("Swagger UI for APIs of Blog Microservice.");
   }
 }
