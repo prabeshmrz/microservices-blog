@@ -7,14 +7,13 @@ import com.javaproject.microservices.blog.mapper.BlogMapper;
 import com.javaproject.microservices.blog.model.Blog;
 import com.javaproject.microservices.blog.repository.BlogRepository;
 import com.javaproject.microservices.blog.utils.AuthenticationUtils;
-import com.javaproject.microservices.blog.utils.exception.DevGlobalException;
-import com.javaproject.microservices.blog.utils.exception.ResourceNotFoundException;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -43,14 +42,14 @@ public class BlogServiceImpl implements BlogService {
   public Blog findById(long id) {
     return blogRepository
       .findById(id)
-      .orElseThrow(ResourceNotFoundException::new);
+      .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource Not Found!!"));
   }
 
   @Override
   public BlogDto updateBlog(long id, BlogDto blogDto) {
     var blog = findById(id);
 
-    if (blogDto.getId() != blog.getId()) throw new DevGlobalException(
+    if (blogDto.getId() != blog.getId()) throw new ResponseStatusException(
       HttpStatus.CONFLICT,
       "Resource You Are Trying To Update Doesnot Matches!!"
     );
